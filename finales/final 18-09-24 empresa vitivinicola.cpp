@@ -138,6 +138,7 @@ void Empresa::leerArchivo(char* nombA){
         archivo.read(reinterpret_cast<char*>(&anio_produccion), sizeof(anio_produccion));
         vinitos.push_back(Vino*(nro,tipo,cantidad_litros, anio_produccion));
     }
+    archivo.close();
 }
 
 void Empresa::anioDeterminado(int anioact) {
