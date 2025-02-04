@@ -152,3 +152,4 @@ void Empresa::anioDeterminado(int anioact) {
     cout<<"Litros que se pueden vender: "<<litrostotal<<endl;
     cout<<"El monto que se puede obtener: "<<montototal<<endl;
 }
+
