@@ -30,7 +30,7 @@ protected:
     int tiempo;
 };
 
-class Avion {
+class Avion : public Viaje {
 public:
     Avion(char* lugar, float costoi, int hs) {
         strcpy(destino, lugar);
@@ -52,7 +52,7 @@ int Avion::calcularTiempo() {
     return tiempo;
 }
 
-class Colectivo {
+class Colectivo : public Viaje {
 public:
     Colectivo(char* lugar, int km2, int hs) {
         strcpy(destino, lugar);
@@ -71,7 +71,7 @@ float Colectivo::calcularPrecio() {
     return precio;
 }
 
-class Mixto {
+class Mixto : public Viaje {
 public:
     Mixto(Colectivo* marianomoreno, Avion* aerosix, char* lugar) {
         strcpy(destino, lugar);
