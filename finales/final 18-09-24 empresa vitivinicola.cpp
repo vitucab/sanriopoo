@@ -3,52 +3,28 @@
 #include <vector>
 
 using namespace std;
-/*
 
-ESTE DISEÑO ES MUY AL PEDO
-
-class Vino {
+class DeMesa {
 protected:
-    int nro, cantidad_litros, anio_produccion, espera;
+    int nro, cantidad_litros, anio_produccion, precio;
     char tipo;
 public:
-    Vino(int num, int cantlitros, int anioprod){
-        this->cantidad_litros = cantlitros;
-        this->anio_produccion = anioprod;
-        this->nro = num;
-    }
+    DeMesa(int num, int cantlitros, int anioprod, char tip, int price) : nro(num), cantidad_litros(cantlitros), anio_produccion(anioprod), tipo(tip), precio(price) {}
     int calcularPrecio();
 };
 
-int Vino::calcularPrecio() {
+int DeMesa::calcularPrecio() {
     return this->precio * this->cantidad_litros;
 }
 
-class DeMesa {
+class Premium : public DeMesa{
 public:
-    DeMesa() {
-        this->precio = 120;
-        this->tipo = 'm';
-        this->espera = 1;
-    }
+    Premium(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'p', 200){}
 };
 
-class Premium {
+class Especial : public DeMesa {
 public:
-    Premium(int cantlitros, int anioprod){
-        this->precio = 200;
-        this->tipo = 'p';
-        this->espera = 2;
-    }
-};
-
-class Especial {
-public:
-    Especial(int cantlitros, int anioprod) {
-        this->precio = 320;
-        this->tipo = 'e';
-        this->espera = 3;
-    }
+    Especial(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'e', 320) {}
 };
 
 class Empresa {
@@ -56,8 +32,8 @@ private:
 public:
     Empresa();
 }
-*/
 
+/*
 class Vino {
 protected:
     int nro, cantidad_litros, anio_produccion, precio, espera;
@@ -211,6 +187,7 @@ int Empresa::elAnioMasMonto() {
     }
     return maxA;
 }
+*/
 
 template <class T>
 class Cola {
