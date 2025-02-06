@@ -101,7 +101,7 @@ class Empresa {
 public:
     void cargarViajes(Viaje* vv);
     void guardarViajes(Viaje* vv, char* nombA);
-    vector<Viaje*> viajes5Baratos();
+    vector<int> viajes5Baratos();
     Viaje* viajeMasTime();
     vector<Viaje*> viajeCiertoTime(int horita);
 protected:
@@ -127,7 +127,7 @@ void Empresa::guardarViajes(char* nombA) {
     }
 }
 
-vector<Viaje*> Empresa::viajes5Baratos() {
+vector<int> Empresa::viajes5Baratos() {
     vector<Viaje*> baratos5;
     if (viajesuchos.empty()) {
         return nullptr;
