@@ -6,52 +6,15 @@ using namespace std;
 
 class DeMesa {
 protected:
-    int nro, cantidad_litros, anio_produccion, precio;
-    char tipo;
-public:
-    DeMesa(int num, int cantlitros, int anioprod, char tip, int price) : nro(num), cantidad_litros(cantlitros), anio_produccion(anioprod), tipo(tip), precio(price) {}
-    int calcularPrecio();
-};
-
-int DeMesa::calcularPrecio() {
-    return this->precio * this->cantidad_litros;
-}
-
-class Premium : public DeMesa{
-public:
-    Premium(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'p', 200){}
-};
-
-class Especial : public DeMesa {
-public:
-    Especial(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'e', 320) {}
-};
-
-class Empresa {
-private:
-public:
-    Empresa();
-}
-
-/*
-class Vino {
-protected:
     int nro, cantidad_litros, anio_produccion, precio, espera;
     char tipo;
 public:
-    Vino(int num, int cantlitros, int anioprod, char t){
-        this->cantidad_litros = cantlitros;
-        this->anio_produccion = anioprod;
-        this->nro = num;
-        this->tipo = t;
+    DeMesa(int num, int cantlitros, int anioprod, char tip, int price) : nro(num), cantidad_litros(cantlitros), anio_produccion(anioprod), tipo(tip), precio(price) {
+        this->espera = 1;
     }
-    void getPrecioYEspera();
     int calcularTotal();
-    int getEspera() {
-        return espera;
-    }
-    int getPrecio() {
-        return precio;
+    int getNro() {
+        return nro;
     }
     int getCantLitros() {
         return cantidad_litros;
@@ -59,51 +22,49 @@ public:
     int getAnioProd() {
         return anio_produccion;
     }
-    int getNro(){
-        return nro;
-    }
     char getTipo() {
-        return t;
+        return tipo;
+    }
+    int getPrecio() {
+        return precio;
+    }
+    int getEspera() {
+        return espera;
     }
 };
 
-void Vino::getPrecioYEspera() {
-    if (tipo == 'm') {
-        precio = 120;
-        espera = 1;
-    } else if(tipo == 'p') {
-        precio = 200;
-        espera = 2;
-    } else if (tipo == 'e') {
-        precio = 320;
-        espera = 3;
-    }
+int DeMesa::calcularTotal() {
+    return this->precio * this->cantidad_litros;
 }
 
-void Vino::calcularTotal() {
-    return this->getPrecio * this->getCantLitros;
-}
+class Premium : public DeMesa{
+private:
+    int espera;
+public:
+    Premium(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'p', 200){
+        this->espera = 2;
+    }
+};
+
+class Especial : public DeMesa {
+private:
+    int espera;
+public:
+    Especial(int num, int cantlitros, int anioprod, char tip, int price) : DeMesa(num, cantlitros, anioprod, 'e', 320) {
+        this->espera = 3;
+    }
+};
 
 class Empresa {
 private:
-    Vino* v;
-    vector<Vino*> vinitos;
+vector<DeMesa*> vinos;
 public:
     Empresa();
-    bool sePuedeVender(Vino* v, int anioact);
     void leerArchivo(char* nombA);
-    pair<int,int> anioDeterminado(int anioact);
-    void archivoDeTexto(char* nombA, char* nombT);
-    vector<int>masLitrosEn5();
-    int elAnioMasVino();
-    int elAnioMasMonto();
-};
-
-bool Empresa::sePuedeVender(Vino* v, int anioact) {
-    if ((anioact - v->getAnioProd) >= v->getEspera){
-        return true;
-    }
-    return false;
+    pair<int, int> anioDeterminado(int aniod);
+    bool sePuedeVender(DeMesa* v, int anioa);
+    void escribirTexto(char* nombA, char* nombB);
+    vector<int> masLitrosEn5();
 }
 
 void Empresa::leerArchivo(char* nombA){
@@ -118,20 +79,40 @@ void Empresa::leerArchivo(char* nombA){
         archivo.read(&tipo, sizeof(tipo));
         archivo.read(reinterpret_cast<char*>(&cantidad_litros), sizeof(cantidad_litros));
         archivo.read(reinterpret_cast<char*>(&anio_produccion), sizeof(anio_produccion));
-        vinitos.push_back(nro,tipo,cantidad_litros, anio_produccion));
+        switch(tipo){
+            case 'm': vinos.push_back(new DeMesa); break;
+            case 'p': vinos.push_back(new Premium); break;
+            case 'e': vinos.push_back(new Especial); break;
+        }
     }
     archivo.close();
 }
 
-pair<int,int> Empresa::anioDeterminado(int anioact) {
+pair<int, int> Empresa::anioDeterminado(int aniod) {
     int montototal = 0, litrostotal = 0;
-    for(const auto& v : vinitos) {
-        if(v->sePuedeVender(v,anioact)) {
+    for(const auto& v : vinos) {
+        if( v->sePuedeVender(v, aniod) ) {
             litrostotal += v->getCantLitros();
             montototal += v->calcularTotal();
         }
     }
     return {litrostotal, montototal};
+}
+
+bool Empresa::sePuedeVender(DeMesa* v, int anioa) {
+    if( ( anioa - v->getAnioProd() ) >= v->getEspera() ) {
+        return true;
+    } else return false;
+}
+
+void Empresa::escribirTexto(char* nombA, char* nombB) {
+    leerArchivo(nombA);
+    ofstream archivo2;
+    archivo2.open(nombB);
+    if(archivo2.fail()) {
+        return;
+    }
+
 }
 
 void Empresa::archivoDeTexto(char* nombA, char* nombT) {
@@ -142,14 +123,28 @@ void Empresa::archivoDeTexto(char* nombA, char* nombT) {
         return;
     }
     archivo2<<"Año - Litros - Monto"<<endl;
-    for(int i=2020;i<=2023;++i) {
+    for(int i = 2020 ; i <= 2023; i++) {
         auto [litros, monto] = anioDeterminado(i);
         archivo2<<i<<" - "<<litros<<" - "<<monto<<endl;
     }
     archivo2.close();
 }
 
-//lo hizo chatgpt, con suerte lo entendi :'v
+vector<int> Empresa::masLitrosEn5() {
+
+}
+
+
+/*
+class Empresa {
+private:
+    vector<Vino*> vinitos;
+public:
+    vector<int>masLitrosEn5();
+    int elAnioMasVino();
+    int elAnioMasMonto();
+};
+
 vector<int> Empresa::masLitrosEn5() {
     map<int,int> litrosXAnio;
     for(const auto& v : vinitos) {
