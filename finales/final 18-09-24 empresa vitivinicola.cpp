@@ -64,7 +64,9 @@ public:
     pair<int, int> anioDeterminado(int aniod);
     bool sePuedeVender(DeMesa* v, int anioa);
     void escribirTexto(char* nombA, char* nombB);
-    vector<int> masLitrosEn5();
+    vector<pair<int,int>> masLitrosEn5();
+    int elAnioMasVino();
+    int elAnioMasMonto();
 }
 
 void Empresa::leerArchivo(char* nombA){
@@ -130,38 +132,20 @@ void Empresa::archivoDeTexto(char* nombA, char* nombT) {
     archivo2.close();
 }
 
-vector<int> Empresa::masLitrosEn5() {
-
-}
-
-
-/*
-class Empresa {
-private:
-    vector<Vino*> vinitos;
-public:
-    vector<int>masLitrosEn5();
-    int elAnioMasVino();
-    int elAnioMasMonto();
-};
-
-vector<int> Empresa::masLitrosEn5() {
-    map<int,int> litrosXAnio;
-    for(const auto& v : vinitos) {
-        litrosXAnio[v.anio_produccion]+=vino.cantidad_litros;
+vector<pair<int,int>> Empresa::masLitrosEn5() {
+    map<int,int> aux;
+    for( const auto& v : vinos ) {
+        aux[v.anio_produccion] += v.cantidad_litros;
     }
-    vector<pair<int,int>> ordenAnios(litrosXAnio.begin(),litrosXAnio.end());
-    sort(ordenAnios.begin(), ordenAnios.end(), [](const auto &a, const auto &b) { return a.second > b.second; });
-    vector<int> los5mas;
-    for (size_t i = 0; i < min<size_t>(5, aniosOrdenados.size()); i++) {
-        top5.push_back(aniosOrdenados[i].first);
-    }
-    return top5;
+    vector<pair<int,int>> los5;
+    sort(los5.begin(), los5.end(), [](const auto &a, const auto &b) { return a.second > b.second; });
+    los5.resize(5);
+    return los5;
 }
 
 int Empresa::elAnioMasVino() {
     int maxA = 0, maxL = 0;
-    for(int i=2020;i<=2025;i++) {
+    for(int i = 2020; i <= 2025; i++) {
         auto [litros,_]=anioDeterminado(i);
         if(litros > maxL){
             maxL = litros;
@@ -173,7 +157,7 @@ int Empresa::elAnioMasVino() {
 
 int Empresa::elAnioMasMonto() {
     int maxA = 0, maxM = 0;
-    for(int i=2020;i<=2025;i++) {
+    for(int i = 2020; i <= 2025; i++) {
         auto [_,monto]=anioDeterminado(i);
         if(monto > maxM){
             maxM = monto;
@@ -182,7 +166,6 @@ int Empresa::elAnioMasMonto() {
     }
     return maxA;
 }
-*/
 
 template <class T>
 class Cola {
